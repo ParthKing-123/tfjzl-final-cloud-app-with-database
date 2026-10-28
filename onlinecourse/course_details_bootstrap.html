@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ course.name }}</title>
+    {% load static %}
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+</head>
+<body>
+<nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand" href="{% url 'onlinecourse:index' %}">Online Course</a>
+    <div>
+        {% if user.is_authenticated %}
+            <span class="mr-2">{{ user.first_name|default:user.username }}</span>
+            <a class="btn btn-link" href="{% url 'onlinecourse:logout' %}">Logout</a>
+        {% else %}
+            <a class="btn btn-link" href="{% url 'onlinecourse:login' %}">Login</a>
+        {% endif %}
+    </div>
+</nav>
+
+<div class="container-fluid mt-3">
+    <h2>{{ course.name }}</h2>
+    <p>{{ course.description }}</p>
+
+    <div class="card-columns-vertical">
+        <h4>Lessons</h4>
+        {% for lesson in course.lesson_set.all %}
+            <div class="card mt-1">
+                <div class="card-header"><h5>Lesson {{ lesson.order|add:1 }}: {{ lesson.title }}</h5></div>
+                <div class="card-body">{{ lesson.content }}</div>
+            </div>
+        {% empty %}
+            <p>No lessons available for this course.</p>
+        {% endfor %}
+    </div>
+</div>
+</body>
+</html>
